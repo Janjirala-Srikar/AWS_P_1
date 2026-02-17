@@ -15,11 +15,11 @@ phases:
   build:
     commands:
       - echo Building backend image...
-      - docker build -t $BACKEND_REPO ./Server
+      - docker build -t $BACKEND_REPO ./aws-mern-cicd-pipeline/server
       - docker tag $BACKEND_REPO:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_REPO:latest
 
       - echo Building frontend image...
-      - docker build -t $FRONTEND_REPO ./Client
+      - docker build -t $FRONTEND_REPO ./aws-mern-cicd-pipeline/client
       - docker tag $FRONTEND_REPO:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
 
   post_build:
