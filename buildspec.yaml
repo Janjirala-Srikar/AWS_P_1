@@ -3,33 +3,34 @@ version: 0.2
 env:
   variables:
     AWS_REGION: us-east-1
-    BACKEND_REPO: inkspire-backend
-    FRONTEND_REPO: inkspire-frontend
+    REPO_NAME: aws/mern-app
+    BACKEND_IMAGE: backend
+    FRONTEND_IMAGE: frontend
 
 phases:
   pre_build:
     commands:
-      - echo Logging in to ECR...
+      - echo Logging in to Amazon ECR...
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - echo AWS ACCOUNT ID = $ACCOUNT_ID
+      - echo AWS Account ID is $ACCOUNT_ID
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
   build:
     commands:
-      - echo Building backend image...
-      - docker build -t $BACKEND_REPO ./aws-mern-cicd-pipeline/server
-      - docker tag $BACKEND_REPO:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_REPO:latest
+      - echo Building backend Docker image...
+      - docker build -t $BACKEND_IMAGE ./aws-mern-cicd-pipeline/server
+      - docker tag $BACKEND_IMAGE:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:backend
 
-      - echo Building frontend image...
-      - docker build -t $FRONTEND_REPO ./aws-mern-cicd-pipeline/client
-      - docker tag $FRONTEND_REPO:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
+      - echo Building frontend Docker image...
+      - docker build -t $FRONTEND_IMAGE ./aws-mern-cicd-pipeline/client
+      - docker tag $FRONTEND_IMAGE:latest $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:frontend
 
   post_build:
     commands:
       - echo Pushing backend image...
-      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_REPO:latest
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:backend
 
       - echo Pushing frontend image...
-      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO:latest
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:frontend
 
       - echo Build completed successfully
