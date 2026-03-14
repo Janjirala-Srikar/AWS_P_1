@@ -19,6 +19,10 @@ import Admin from './components/Admin/Admin.jsx'
 
 import {ArticleContextProvider} from '../src/contexts/ArticleContext.jsx'
 
+
+console.log("CLERK KEY:", import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+
+
 const browserRouterObject=createBrowserRouter([
   {
     path:"/",
