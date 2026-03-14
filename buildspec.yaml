@@ -34,3 +34,8 @@ phases:
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:frontend
 
       - echo Build completed successfully
+
+artifacts:
+  files:
+    - appspec.yml
+    - scripts/**/*
